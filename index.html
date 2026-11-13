@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио — Frontend Разработчик</title>
+    <style>
+        /* ========== БАЗОВЫЕ СТИЛИ ========== */
+        :root {
+            --bg-color: #121212;
+            --surface: #1e1e1e;
+            --surface-hover: #2a2a2a;
+            --text-main: #e0e0e0;
+            --text-muted: #888888;
+            --accent: #bb86fc;
+            --accent-hover: #9a66d4;
+            --border: #333333;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ========== ФОН С ПАДАЮЩИМ КОДОМ ========== */
+        #code-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            opacity: 0.15; /* Делаем фон ненавязчивым */
+            pointer-events: none;
+        }
+
+        /* ========== НАВИГАЦИЯ ========== */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            transition: padding 0.3s;
+        }
+        .nav-content {
+            max-width: 1100px; margin: 0 auto; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; }
+        .logo span { color: var(--accent); }
+        .nav-links a {
+            color: var(--text-muted); text-decoration: none; margin-left: 20px;
+            font-size: 0.9rem; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* ========== HERO СЕКЦИЯ ========== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s forwards;
+        }
+        .hero h1 span { color: var(--accent); }
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s 0.2s forwards;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: var(--accent);
+            color: #121212;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s 0.4s forwards;
+        }
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(187, 134, 252, 0.2);
+        }
+
+        /* ========== СЕКЦИЯ ПРОЕКТОВ ========== */
+        .section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; }
+        .section-title {
+            font-size: 2rem; margin-bottom: 50px; text-align: center;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        /* Карточки с эффектом появления при скролле */
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border-color: var(--accent);
+        }
+        .project-title {
+            font-size: 1.4rem; font-weight: 700; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .project-title span { color: var(--accent); font-size: 1.2rem; }
+        .project-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1; }
+        .project-stack {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto;
+        }
+        .tag {
+            background: rgba(187, 134, 252, 0.1);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* ========== ПОДВАЛ ========== */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+        }
+        .social-links { margin-bottom: 20px; }
+        .social-links a {
+            color: var(--text-main); text-decoration: none; margin: 0 15px;
+            font-size: 1.1rem; transition: color 0.3s;
+        }
+        .social-links a:hover { color: var(--accent); }
+        .copyright { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* ========== АНИМАЦИИ ========== */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* Скрываем меню на мобилках для чистоты */
+            .section { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ФОН С ПАДАЮЩИМ КОДОМ -->
+    <canvas id="code-bg"></canvas>
+
+    <!-- НАВИГАЦИЯ -->
+    <nav>
+        <div class="nav-content">
+            <div class="logo">DEV<span>.PORTFOLIO</span></div>
+            <div class="nav-links">
+                <a href="#projects">Проекты</a>
+                <a href="#about">Обо мне</a>
+                <a href="#contact">Контакты</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <section class="hero">
+        <h1>Привет, я <span>Frontend</span><br>Разработчик</h1>
+        <p>Создаю быстрые, адаптивные и визуально привлекательные веб-приложения. От идеи до готового продукта в браузере.</p>
+        <a href="#projects" class="btn">Смотреть работы</a>
+    </section>
+
+    <!-- СЕКЦИЯ ПРОЕКТОВ -->
+    <section id="projects" class="section">
+        <h2 class="section-title">Мои работы</h2>
+        <div class="projects-grid">
+            
+            <!-- Проект 1: ФинГрамотность -->
+            <a href="https://xayryedel.github.io/fingram/" target="_blank" class="project-card">
+                <div class="project-title">ФинГрамотность <span>↗</span></div>
+                <div class="project-desc">Образовательный проект с тестированием. Адаптивные тесты под возраст пользователя, динамическая выдача результатов и уроков.</div>
+                <div class="project-stack">
+                    <span class="tag">HTML5</span>
+                    <span class="tag">CSS3</span>
+                    <span class="tag">JavaScript</span>
+                </div>
+            </a>
+
+            <!-- Проект 2: LEAF -->
+            <a href="https://xayryedel.github.io/leaf/" target="_blank" class="project-card">
+                <div class="project-title">LEAF <span>↗</span></div>
+                <div class="project-desc">Интернет-магазин косметики и парфюмерии. Каталог товаров, фильтрация, адаптивная верстка и стильный дизайн.</div>
+                <div class="project-stack">
+                    <span class="tag">E-commerce</span>
+                    <span class="tag">Адаптив</span>
+                    <span class="tag">UI/UX</span>
+                </div>
+            </a>
+
+            <!-- Проект 3: BG Remover -->
+            <a href="https://xayryedel.github.io/bg-remover/" target="_blank" class="project-card">
+                <div class="project-title">BG Remover <span>↗</span></div>
+                <div class="project-desc">Инструмент для удаления фона с фотографий прямо в браузере. Работа с изображениями и Canvas.</div>
+                <div class="project-stack">
+                    <span class="tag">Canvas API</span>
+                    <span class="tag">Image Processing</span>
+                    <span class="tag">JS</span>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- СЕКЦИЯ ОБО МНЕ -->
+    <section id="about" class="section">
+        <h2 class="section-title">Обо мне</h2>
+        <div style="max-width: 600px; margin: 0 auto; text-align: center; color: var(--text-muted); font-size: 1.1rem;">
+            <p>Пишу чистый код, который легко поддерживать. Люблю разбираться в сложных задачах и делать интерфейсы, которыми приятно пользоваться.</p>
+            <p style="margin-top: 20px;">Всегда на связи и открыт к интересным проектам.</p>
+        </div>
+    </section>
+
+    <!-- ПОДВАЛ / КОНТАКТЫ -->
+    <footer id="contact">
+        <div class="social-links">
+            <a href="https://t.me/SPXLD" target="_blank">Telegram (@SPXLD)</a>
+            <a href="https://github.com/xayryedel" target="_blank">GitHub</a>
+        </div>
+        <div class="copyright">© 2026. Разработано с душой.</div>
+    </footer>
+
+    <!-- ========== СКРИПТЫ ========== -->
+    <script>
+        // 1. АНИМАЦИЯ ФОНА (Падающий код)
+        const canvas = document.getElementById('code-bg');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        // Слова, которые будут падать
+        const codeWords = [
+            'const', 'let', 'function()', '=>', '{}', '[]', 
+            'React', 'Vue', 'Node.js', 'Python', 'HTML', 'CSS', 
+            'Git', 'API', 'npm', 'async', 'await', 'return', 
+            'if', 'else', 'True', 'False', 'null', 'undefined', 
+            'import', 'export', 'class', 'style', 'flex', 'grid'
+        ];
+
+        const fontSize = 16;
+        const columns = width / fontSize;
+        const drops = [];
+
+        for (let x = 0; x < columns; x++) {
+            drops[x] = Math.random() * height;
+        }
+
+        function draw() {
+            // Очищаем экран с легким шлейфом
+            ctx.fillStyle = 'rgba(18, 18, 18, 0.08)';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = '#bb86fc'; // Цвет кода (акцентный)
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                // Выбираем случайное слово
+                const text = codeWords[Math.floor(Math.random() * codeWords.length)];
+                
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Сброс строки наверх
+                if (drops[i] * fontSize > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 50); // Скорость падения (50мс)
+
+        // Обработка изменения размера окна
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // 2. АНИМАЦИЯ ПОЯВЛЕНИЯ КАРТОЧЕК ПРИ СКРОЛЛЕ
+        const cards = document.querySelectorAll('.project-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // Добавляем задержку для эффекта "каскада"
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 150);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        cards.forEach(card => observer.observe(card));
+
+        // 3. Эффект уменьшения навигации при скролле
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.padding = '10px 0';
+            } else {
+                nav.style.padding = '20px 0';
+            }
+        });
+    </script>
+</body>
+</html>
