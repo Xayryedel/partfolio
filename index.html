@@ -34,7 +34,7 @@
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: -1;
-            opacity: 0.15; /* Делаем фон ненавязчивым */
+            opacity: 0.15;
             pointer-events: none;
         }
 
@@ -119,7 +119,6 @@
             gap: 30px;
         }
         
-        /* Карточки с эффектом появления при скролле */
         .project-card {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -132,7 +131,19 @@
             transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
             opacity: 0;
             transform: translateY(40px);
+            position: relative;
+            overflow: hidden;
         }
+        /* Добавляем акцентную полоску для Музыкального проекта */
+        .project-card.featured { border-color: rgba(187, 134, 252, 0.4); }
+        .project-card.featured::before {
+            content: '⭐ Featured';
+            position: absolute; top: 15px; right: -30px;
+            background: var(--accent); color: #121212;
+            padding: 4px 40px; font-size: 0.7rem; font-weight: 700;
+            transform: rotate(45deg);
+        }
+
         .project-card.visible {
             opacity: 1;
             transform: translateY(0);
@@ -182,7 +193,7 @@
 
         /* Адаптив */
         @media (max-width: 768px) {
-            .nav-links { display: none; } /* Скрываем меню на мобилках для чистоты */
+            .nav-links { display: none; }
             .section { padding: 60px 20px; }
         }
     </style>
@@ -216,7 +227,19 @@
         <h2 class="section-title">Мои работы</h2>
         <div class="projects-grid">
             
-            <!-- Проект 1: ФинГрамотность -->
+            <!-- Проект 1: MusicWave (Featured) -->
+            <a href="https://xayryedel.github.io/music-wave-web/" target="_blank" class="project-card featured">
+                <div class="project-title">MusicWave <span>↗</span></div>
+                <div class="project-desc">Полноценный музыкальный веб-сервис. Поиск треков через iTunes API, кастомный плеер с эквалайзером, алгоритм «Моя волна», облачное сохранение избранного (Supabase Auth).</div>
+                <div class="project-stack">
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">Supabase</span>
+                    <span class="tag">iTunes API</span>
+                    <span class="tag">SPA</span>
+                </div>
+            </a>
+
+            <!-- Проект 2: ФинГрамотность -->
             <a href="https://xayryedel.github.io/fingram/" target="_blank" class="project-card">
                 <div class="project-title">ФинГрамотность <span>↗</span></div>
                 <div class="project-desc">Образовательный проект с тестированием. Адаптивные тесты под возраст пользователя, динамическая выдача результатов и уроков.</div>
@@ -227,7 +250,7 @@
                 </div>
             </a>
 
-            <!-- Проект 2: LEAF -->
+            <!-- Проект 3: LEAF -->
             <a href="https://xayryedel.github.io/leaf/" target="_blank" class="project-card">
                 <div class="project-title">LEAF <span>↗</span></div>
                 <div class="project-desc">Интернет-магазин косметики и парфюмерии. Каталог товаров, фильтрация, адаптивная верстка и стильный дизайн.</div>
@@ -238,7 +261,7 @@
                 </div>
             </a>
 
-            <!-- Проект 3: BG Remover -->
+            <!-- Проект 4: BG Remover -->
             <a href="https://xayryedel.github.io/bg-remover/" target="_blank" class="project-card">
                 <div class="project-title">BG Remover <span>↗</span></div>
                 <div class="project-desc">Инструмент для удаления фона с фотографий прямо в браузере. Работа с изображениями и Canvas.</div>
@@ -279,13 +302,13 @@
         let width = canvas.width = window.innerWidth;
         let height = canvas.height = window.innerHeight;
 
-        // Слова, которые будут падать
         const codeWords = [
             'const', 'let', 'function()', '=>', '{}', '[]', 
             'React', 'Vue', 'Node.js', 'Python', 'HTML', 'CSS', 
             'Git', 'API', 'npm', 'async', 'await', 'return', 
             'if', 'else', 'True', 'False', 'null', 'undefined', 
-            'import', 'export', 'class', 'style', 'flex', 'grid'
+            'import', 'export', 'class', 'style', 'flex', 'grid',
+            'Supabase', 'Flask', 'SQL', 'JSON', '.map()', '.filter()'
         ];
 
         const fontSize = 16;
@@ -297,29 +320,24 @@
         }
 
         function draw() {
-            // Очищаем экран с легким шлейфом
             ctx.fillStyle = 'rgba(18, 18, 18, 0.08)';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.fillStyle = '#bb86fc'; // Цвет кода (акцентный)
+            ctx.fillStyle = '#bb86fc'; // Фиолетовый цвет
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
-                // Выбираем случайное слово
                 const text = codeWords[Math.floor(Math.random() * codeWords.length)];
-                
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-                // Сброс строки наверх
                 if (drops[i] * fontSize > height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
                 drops[i]++;
             }
         }
-        setInterval(draw, 50); // Скорость падения (50мс)
+        setInterval(draw, 50);
 
-        // Обработка изменения размера окна
         window.addEventListener('resize', () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -331,7 +349,6 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    // Добавляем задержку для эффекта "каскада"
                     setTimeout(() => {
                         entry.target.classList.add('visible');
                     }, index * 150);
