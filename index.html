@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Портфолио — Frontend Разработчик</title>
     <style>
-        /* ========== БАЗОВЫЕ СТИЛИ ========== */
         :root {
             --bg-color: #121212;
             --surface: #1e1e1e;
@@ -28,7 +27,6 @@
             line-height: 1.6;
         }
 
-        /* ========== ФОН С ПАДАЮЩИМ КОДОМ ========== */
         #code-bg {
             position: fixed;
             top: 0; left: 0;
@@ -38,7 +36,6 @@
             pointer-events: none;
         }
 
-        /* ========== НАВИГАЦИЯ ========== */
         nav {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -61,7 +58,6 @@
         }
         .nav-links a:hover { color: var(--accent); }
 
-        /* ========== HERO СЕКЦИЯ ========== */
         .hero {
             height: 100vh;
             display: flex;
@@ -108,7 +104,6 @@
             box-shadow: 0 10px 20px rgba(187, 134, 252, 0.2);
         }
 
-        /* ========== СЕКЦИЯ ПРОЕКТОВ ========== */
         .section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; }
         .section-title {
             font-size: 2rem; margin-bottom: 50px; text-align: center;
@@ -134,7 +129,7 @@
             position: relative;
             overflow: hidden;
         }
-        /* Добавляем акцентную полоску для Музыкального проекта */
+        
         .project-card.featured { border-color: rgba(187, 134, 252, 0.4); }
         .project-card.featured::before {
             content: '⭐ Featured';
@@ -171,7 +166,6 @@
             font-weight: 600;
         }
 
-        /* ========== ПОДВАЛ ========== */
         footer {
             text-align: center;
             padding: 60px 20px;
@@ -186,12 +180,10 @@
         .social-links a:hover { color: var(--accent); }
         .copyright { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* ========== АНИМАЦИИ ========== */
         @keyframes fadeUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Адаптив */
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .section { padding: 60px 20px; }
@@ -200,10 +192,8 @@
 </head>
 <body>
 
-    <!-- ФОН С ПАДАЮЩИМ КОДОМ -->
     <canvas id="code-bg"></canvas>
 
-    <!-- НАВИГАЦИЯ -->
     <nav>
         <div class="nav-content">
             <div class="logo">DEV<span>.PORTFOLIO</span></div>
@@ -215,19 +205,16 @@
         </div>
     </nav>
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
     <section class="hero">
         <h1>Привет, я <span>Frontend</span><br>Разработчик</h1>
         <p>Создаю быстрые, адаптивные и визуально привлекательные веб-приложения. От идеи до готового продукта в браузере.</p>
         <a href="#projects" class="btn">Смотреть работы</a>
     </section>
 
-    <!-- СЕКЦИЯ ПРОЕКТОВ -->
     <section id="projects" class="section">
         <h2 class="section-title">Мои работы</h2>
         <div class="projects-grid">
             
-            <!-- Проект 1: MusicWave (Featured) -->
             <a href="https://xayryedel.github.io/music-wave-web/" target="_blank" class="project-card featured">
                 <div class="project-title">MusicWave <span>↗</span></div>
                 <div class="project-desc">Полноценный музыкальный веб-сервис. Поиск треков через iTunes API, кастомный плеер с эквалайзером, алгоритм «Моя волна», облачное сохранение избранного (Supabase Auth).</div>
@@ -239,7 +226,6 @@
                 </div>
             </a>
 
-            <!-- Проект 2: ФинГрамотность -->
             <a href="https://xayryedel.github.io/fingram/" target="_blank" class="project-card">
                 <div class="project-title">ФинГрамотность <span>↗</span></div>
                 <div class="project-desc">Образовательный проект с тестированием. Адаптивные тесты под возраст пользователя, динамическая выдача результатов и уроков.</div>
@@ -250,7 +236,6 @@
                 </div>
             </a>
 
-            <!-- Проект 3: LEAF -->
             <a href="https://xayryedel.github.io/leaf/" target="_blank" class="project-card">
                 <div class="project-title">LEAF <span>↗</span></div>
                 <div class="project-desc">Интернет-магазин косметики и парфюмерии. Каталог товаров, фильтрация, адаптивная верстка и стильный дизайн.</div>
@@ -261,7 +246,6 @@
                 </div>
             </a>
 
-            <!-- Проект 4: BG Remover -->
             <a href="https://xayryedel.github.io/bg-remover/" target="_blank" class="project-card">
                 <div class="project-title">BG Remover <span>↗</span></div>
                 <div class="project-desc">Инструмент для удаления фона с фотографий прямо в браузере. Работа с изображениями и Canvas.</div>
@@ -272,10 +256,19 @@
                 </div>
             </a>
 
+            <a href="https://xayryedel.github.io/-/" target="_blank" class="project-card">
+                <div class="project-title">FoodHub <span>↗</span></div>
+                <div class="project-desc">Сайт доставки пиццы и суши. Интерактивное меню, корзина, выбор размера и автоматический подсчет итоговой суммы.</div>
+                <div class="project-stack">
+                    <span class="tag">E-commerce</span>
+                    <span class="tag">Vanilla JS</span>
+                    <span class="tag">Cart Logic</span>
+                </div>
+            </a>
+
         </div>
     </section>
 
-    <!-- СЕКЦИЯ ОБО МНЕ -->
     <section id="about" class="section">
         <h2 class="section-title">Обо мне</h2>
         <div style="max-width: 600px; margin: 0 auto; text-align: center; color: var(--text-muted); font-size: 1.1rem;">
@@ -284,7 +277,6 @@
         </div>
     </section>
 
-    <!-- ПОДВАЛ / КОНТАКТЫ -->
     <footer id="contact">
         <div class="social-links">
             <a href="https://t.me/SPXLD" target="_blank">Telegram (@SPXLD)</a>
@@ -293,9 +285,7 @@
         <div class="copyright">© 2026. Разработано с душой.</div>
     </footer>
 
-    <!-- ========== СКРИПТЫ ========== -->
     <script>
-        // 1. АНИМАЦИЯ ФОНА (Падающий код)
         const canvas = document.getElementById('code-bg');
         const ctx = canvas.getContext('2d');
 
@@ -323,7 +313,7 @@
             ctx.fillStyle = 'rgba(18, 18, 18, 0.08)';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.fillStyle = '#bb86fc'; // Фиолетовый цвет
+            ctx.fillStyle = '#bb86fc';
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
@@ -343,7 +333,6 @@
             height = canvas.height = window.innerHeight;
         });
 
-        // 2. АНИМАЦИЯ ПОЯВЛЕНИЯ КАРТОЧЕК ПРИ СКРОЛЛЕ
         const cards = document.querySelectorAll('.project-card');
         
         const observer = new IntersectionObserver((entries) => {
@@ -359,7 +348,6 @@
 
         cards.forEach(card => observer.observe(card));
 
-        // 3. Эффект уменьшения навигации при скролле
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
             if (window.scrollY > 50) {
