@@ -3,378 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портфолио — Frontend Разработчик</title>
+    <title>DomTech & PlayZone</title>
     <style>
         :root {
-            --bg-color: #121212;
+            --mint: #a8e6cf;
+            --peach: #ffd3b6;
+            --dark: #2c3e50;
+            --white: #ffffff;
+            --gray: #f5f7fa;
+            --bg-dark: #121212;
             --surface: #1e1e1e;
-            --surface-hover: #2a2a2a;
             --text-main: #e0e0e0;
             --text-muted: #888888;
             --accent: #bb86fc;
-            --accent-hover: #9a66d4;
-            --border: #333333;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, var(--mint) 0%, var(--peach) 100%); background-attachment: fixed; color: var(--dark); min-height: 100vh; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
         
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
+        header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); position: sticky; top: 0; z-index: 100; }
+        .logo a { font-size: 24px; font-weight: 800; color: var(--dark); text-decoration: none; cursor: pointer; }
+        nav { display: flex; gap: 20px; align-items: center; }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 600; transition: 0.3s; cursor: pointer; }
+        nav a:hover { color: #27ae60; }
+        .cart-icon { background: var(--dark); color: var(--white); padding: 8px 16px; border-radius: 20px; }
 
-        #code-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            opacity: 0.15;
-            pointer-events: none;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; flex: 1; width: 100%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
+        .card { background: var(--white); border-radius: 24px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); transition: 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); }
+        .card img { width: 100%; height: 220px; object-fit: contain; background: var(--gray); border-radius: 16px; margin-bottom: 15px; padding: 10px; }
+        .card h3 { font-size: 18px; margin-bottom: 10px; flex: 1; }
+        .price { font-size: 22px; font-weight: 800; color: #27ae60; margin-bottom: 15px; }
 
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            background: rgba(18, 18, 18, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-            padding: 20px 0;
-            transition: padding 0.3s;
-        }
-        .nav-content {
-            max-width: 1100px; margin: 0 auto; padding: 0 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; }
-        .logo span { color: var(--accent); }
-        .nav-links a {
-            color: var(--text-muted); text-decoration: none; margin-left: 20px;
-            font-size: 0.9rem; transition: color 0.3s;
-        }
-        .nav-links a:hover { color: var(--accent); }
+        .btn { display: block; text-align: center; padding: 12px; background: var(--dark); color: var(--white); text-decoration: none; border-radius: 12px; font-weight: bold; transition: 0.3s; border: none; cursor: pointer; width: 100%; }
+        .btn:hover { background: #1a252f; }
+        .btn-outline { background: transparent; border: 2px solid var(--dark); color: var(--dark); }
 
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-        }
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s forwards;
-        }
-        .hero h1 span { color: var(--accent); }
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.3rem);
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s 0.2s forwards;
-        }
-        .btn {
-            display: inline-block;
-            padding: 14px 32px;
-            background: var(--accent);
-            color: #121212;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s 0.4s forwards;
-        }
-        .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(187, 134, 252, 0.2);
-        }
+        .product-page { display: flex; gap: 50px; background: var(--white); padding: 40px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08); flex-wrap: wrap; }
+        .product-gallery { flex: 1; min-width: 300px; position: relative; overflow: hidden; border-radius: 20px; background: var(--gray); display: flex; align-items: center; justify-content: center; }
+        .product-gallery img { width: 100%; max-width: 500px; transition: transform 0.4s ease; cursor: crosshair; }
+        .product-gallery:hover img { transform: scale(1.6); }
+        .product-details { flex: 1; min-width: 300px; display: flex; flex-direction: column; }
+        .product-details h1 { font-size: 32px; margin-bottom: 15px; }
+        .product-details .price { font-size: 36px; margin-bottom: 25px; }
+        .specs { margin-top: 30px; background: var(--gray); padding: 20px; border-radius: 15px; }
+        .specs h3 { margin-bottom: 15px; }
+        .specs ul { list-style: none; }
+        .specs li { margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px; display: flex; justify-content: space-between; }
+        .specs li span { font-weight: bold; }
 
-        .section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; }
-        .section-title {
-            font-size: 2rem; margin-bottom: 50px; text-align: center;
-        }
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .project-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
-            opacity: 0;
-            transform: translateY(40px);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .project-card.featured { border-color: rgba(187, 134, 252, 0.4); }
-        .project-card.featured::before {
-            content: '⭐ Featured';
-            position: absolute; top: 15px; right: -30px;
-            background: var(--accent); color: #121212;
-            padding: 4px 40px; font-size: 0.7rem; font-weight: 700;
-            transform: rotate(45deg);
-        }
+        #cart-items { display: flex; flex-direction: column; gap: 15px; flex: 2; min-width: 300px; }
 
-        .project-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border-color: var(--accent);
-        }
-        .project-title {
-            font-size: 1.4rem; font-weight: 700; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .project-title span { color: var(--accent); font-size: 1.2rem; }
+        #screen-portfolio { background-color: var(--bg-dark); color: var(--text-main); padding: 0; max-width: 100%; position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; z-index: 999; }
+        .portfolio-hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; z-index: 1; }
+        .portfolio-hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; margin-bottom: 20px; }
+        .portfolio-hero h1 span { color: var(--accent); }
+        .portfolio-hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 40px; }
+        .portfolio-hero .btn { background: var(--accent); color: #121212; width: auto; padding: 14px 32px; border-radius: 30px; }
+        .portfolio-hero .btn:hover { background: #9a66d4; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(187, 134, 252, 0.2); }
+
+        .portfolio-section { padding: 80px 20px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+        .portfolio-section h2 { font-size: 2rem; margin-bottom: 50px; text-align: center; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .project-card { background: var(--surface); border: 1px solid #333; border-radius: 16px; padding: 30px; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: 0.4s; position: relative; overflow: hidden; }
+        .project-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-color: var(--accent); }
+        .project-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .project-title span { color: var(--accent); }
         .project-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1; }
-        .project-stack {
-            display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto;
-        }
-        .tag {
-            background: rgba(187, 134, 252, 0.1);
-            color: var(--accent);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        footer {
-            text-align: center;
-            padding: 60px 20px;
-            border-top: 1px solid var(--border);
-            margin-top: 50px;
-        }
-        .social-links { margin-bottom: 20px; }
-        .social-links a {
-            color: var(--text-main); text-decoration: none; margin: 0 15px;
-            font-size: 1.1rem; transition: color 0.3s;
-        }
-        .social-links a:hover { color: var(--accent); }
-        .copyright { color: var(--text-muted); font-size: 0.9rem; }
-
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .section { padding: 60px 20px; }
-        }
+        .project-stack { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+        .tag { background: rgba(187, 134, 252, 0.1); color: var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        #code-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.15; pointer-events: none; }
+        
+        #screen-portfolio footer { text-align: center; padding: 30px; color: var(--text-muted); border-top: 1px solid #333; position: relative; z-index: 1; }
+        #screen-portfolio footer a { color: var(--text-main); text-decoration: none; margin: 0 15px; }
+        #screen-portfolio footer a:hover { color: var(--accent); }
+        .play-card { align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        .play-card:hover { border-color: var(--accent); }
+        .play-card span { font-size: 48px; margin-bottom: 10px; }
+        .play-card p { color: #888; font-size: 14px; text-align: center; }
     </style>
 </head>
 <body>
+    <canvas id="code-bg" class="hidden"></canvas>
 
-    <canvas id="code-bg"></canvas>
+    <header id="main-header">
+        <div class="logo"><a onclick="showScreen('home')">DomTech</a></div>
+        <nav>
+            <a onclick="showScreen('home')">Магазин</a>
+            <a onclick="showScreen('catalog')">Каталог</a>
+            <a onclick="showScreen('playzone')">Игры</a>
+            <a onclick="showScreen('portfolio')">Портфолио</a>
+            <a onclick="showScreen('cart')" class="cart-icon">Корзина (<span id="cart-count-header">0</span>)</a>
+        </nav>
+    </header>
 
-    <nav>
-        <div class="nav-content">
-            <div class="logo">DEV<span>.PORTFOLIO</span></div>
-            <div class="nav-links">
-                <a href="#projects">Проекты</a>
-                <a href="#about">Обо мне</a>
-                <a href="#contact">Контакты</a>
+    <div class="container" id="screen-home">
+        <div style="text-align: center; margin-bottom: 50px; margin-top: 20px;">
+            <h1 style="font-size: 48px; margin-bottom: 15px;">Техника, которая вписывается в твой стиль</h1>
+            <p style="font-size: 18px; opacity: 0.8; max-width: 600px; margin: 0 auto;">Мы собрали лучшее для дома, где важна не только функциональность, но и эстетика.</p>
+        </div>
+        <h2 style="margin-bottom: 30px; font-size: 28px;">Популярные товары</h2>
+        <div class="grid">
+            <div class="card"><img src="fridge.jpg" alt="Холодильник"><h3>Умный холодильник Smart X</h3><div class="price">45 000 ₽</div><button class="btn" onclick="showProduct('Холодильник Smart X', 45000, 'fridge.jpg', '350 л', 'Сенсорный')">Смотреть</button></div>
+            <div class="card"><img src="washer.jpg" alt="Стиральная машина"><h3>Стиральная машина Aqua Pro</h3><div class="price">32 000 ₽</div><button class="btn" onclick="showProduct('Стиральная машина Aqua Pro', 32000, 'washer.jpg', '8 кг', 'Электронный')">Смотреть</button></div>
+            <div class="card"><img src="microwave.jpg" alt="Микроволновка"><h3>Микроволновая печь HeatWave</h3><div class="price">8 500 ₽</div><button class="btn" onclick="showProduct('Микроволновка HeatWave', 8500, 'microwave.jpg', '20 л', 'Механический')">Смотреть</button></div>
+            <div class="card"><img src="vacuum.jpg" alt="Пылесос"><h3>Робот-пылесос CleanBot</h3><div class="price">25 000 ₽</div><button class="btn" onclick="showProduct('Робот-пылесос CleanBot', 25000, 'vacuum.jpg', '0.5 л', 'Приложение')">Смотреть</button></div>
+        </div>
+    </div>
+
+    <div class="container hidden" id="screen-catalog">
+        <h1 style="margin-bottom: 30px;">Все товары</h1>
+        <div class="grid">
+            <div class="card"><img src="fridge.jpg" alt="Холодильник"><h3>Умный холодильник Smart X</h3><div class="price">45 000 ₽</div><button class="btn" onclick="showProduct('Холодильник Smart X', 45000, 'fridge.jpg', '350 л', 'Сенсорный')">Смотреть</button></div>
+            <div class="card"><img src="washer.jpg" alt="Стиральная машина"><h3>Стиральная машина Aqua Pro</h3><div class="price">32 000 ₽</div><button class="btn" onclick="showProduct('Стиральная машина Aqua Pro', 32000, 'washer.jpg', '8 кг', 'Электронный')">Смотреть</button></div>
+        </div>
+    </div>
+
+    <div class="container hidden" id="screen-product">
+        <div class="product-page">
+            <div class="product-gallery"><img src="" id="prod-img" alt="Товар"></div>
+            <div class="product-details">
+                <h1 id="prod-title">Название</h1>
+                <div class="price" id="prod-price">0 ₽</div>
+                <button class="btn" id="prod-add-btn" style="margin-bottom: 15px;">Добавить в корзину</button>
+                <button class="btn btn-outline">Купить в 1 клик</button>
+                <div class="specs">
+                    <h3>Характеристики</h3>
+                    <ul>
+                        <li>Объем: <span id="prod-spec1">-</span></li>
+                        <li>Управление: <span id="prod-spec2">-</span></li>
+                        <li>Гарантия: <span>3 года</span></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <section class="hero">
-        <h1>Привет, я <span>Frontend</span><br>Разработчик</h1>
-        <p>Создаю быстрые, адаптивные и визуально привлекательные веб-приложения. От идеи до готового продукта в браузере.</p>
-        <a href="#projects" class="btn">Смотреть работы</a>
-    </section>
-
-    <section id="projects" class="section">
-        <h2 class="section-title">Мои работы</h2>
-        <div class="projects-grid">
-            
-            <a href="https://xayryedel.github.io/music-wave-web/" target="_blank" class="project-card featured">
-                <div class="project-title">MusicWave <span>↗</span></div>
-                <div class="project-desc">Полноценный музыкальный веб-сервис. Поиск треков через iTunes API, кастомный плеер с эквалайзером, алгоритм «Моя волна», облачное сохранение избранного (Supabase Auth).</div>
-                <div class="project-stack">
-                    <span class="tag">JavaScript</span>
-                    <span class="tag">Supabase</span>
-                    <span class="tag">iTunes API</span>
-                    <span class="tag">SPA</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/fingram/" target="_blank" class="project-card">
-                <div class="project-title">ФинГрамотность <span>↗</span></div>
-                <div class="project-desc">Образовательный проект с тестированием. Адаптивные тесты под возраст пользователя, динамическая выдача результатов и уроков.</div>
-                <div class="project-stack">
-                    <span class="tag">HTML5</span>
-                    <span class="tag">CSS3</span>
-                    <span class="tag">JavaScript</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/leaf/" target="_blank" class="project-card">
-                <div class="project-title">LEAF <span>↗</span></div>
-                <div class="project-desc">Интернет-магазин косметики и парфюмерии. Каталог товаров, фильтрация, адаптивная верстка и стильный дизайн.</div>
-                <div class="project-stack">
-                    <span class="tag">E-commerce</span>
-                    <span class="tag">Адаптив</span>
-                    <span class="tag">UI/UX</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/bg-remover/" target="_blank" class="project-card">
-                <div class="project-title">BG Remover <span>↗</span></div>
-                <div class="project-desc">Инструмент для удаления фона с фотографий прямо в браузере. Работа с изображениями и Canvas.</div>
-                <div class="project-stack">
-                    <span class="tag">Canvas API</span>
-                    <span class="tag">Image Processing</span>
-                    <span class="tag">JS</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/-/" target="_blank" class="project-card">
-                <div class="project-title">FoodHub <span>↗</span></div>
-                <div class="project-desc">Сайт доставки пиццы и суши. Интерактивное меню, корзина, выбор размера и автоматический подсчет итоговой суммы.</div>
-                <div class="project-stack">
-                    <span class="tag">E-commerce</span>
-                    <span class="tag">Vanilla JS</span>
-                    <span class="tag">Cart Logic</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/codecraft-web/#form" target="_blank" class="project-card">
-                <div class="project-title">CodeCraft <span>↗</span></div>
-                <div class="project-desc">Лендинг IT-курсов с таймером обратного отсчёта, формой заявки и блоком отзывов. Анимации при скролле и адаптивная верстка.</div>
-                <div class="project-stack">
-                    <span class="tag">Landing Page</span>
-                    <span class="tag">JS Timer</span>
-                    <span class="tag">Animations</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/kicks-store/" target="_blank" class="project-card">
-                <div class="project-title">KicksStore <span>↗</span></div>
-                <div class="project-desc">Магазин кроссовок с фильтром по брендам, модальным окном товара, зумом изображения и полноценной корзиной.</div>
-                <div class="project-stack">
-                    <span class="tag">E-commerce</span>
-                    <span class="tag">Vanilla JS</span>
-                    <span class="tag">Image Zoom</span>
-                </div>
-            </a>
-
+    <div class="container hidden" id="screen-cart">
+        <h1 style="margin-bottom: 30px;">Ваша корзина</h1>
+        <div style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
+            <div id="cart-items" style="flex: 2; min-width: 300px;"></div>
+            <div class="specs" style="flex: 1; min-width: 280px; margin-top: 0; background: var(--white);">
+                <h3 style="font-size: 22px; margin-bottom: 20px;">Итого</h3>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 18px;"><span>Товары (<span id="total-count">0</span>)</span><span id="total-price">0 ₽</span></div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 24px; font-weight: 800; color: #27ae60;"><span>К оплате</span><span id="final-price">0 ₽</span></div>
+                <button class="btn" style="padding: 15px; font-size: 18px;" onclick="checkout()">Оформить заказ</button>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <section id="about" class="section">
-        <h2 class="section-title">Обо мне</h2>
-        <div style="max-width: 600px; margin: 0 auto; text-align: center; color: var(--text-muted); font-size: 1.1rem;">
-            <p>Пишу чистый код, который легко поддерживать. Люблю разбираться в сложных задачах и делать интерфейсы, которыми приятно пользоваться.</p>
-            <p style="margin-top: 20px;">Всегда на связи и открыт к интересным проектам.</p>
+    <div class="container hidden" id="screen-playzone" style="text-align: center;">
+        <h1 style="margin-bottom: 20px; font-size: 42px;">PlayZone</h1>
+        <p style="margin-bottom: 40px; font-size: 18px;">Выбирай игру и ставь рекорды. Работает без интернета.</p>
+        <div class="grid" style="justify-content: center;">
+            <div class="card play-card"><span>❌</span><h3>Крестики-нолики</h3><p>Классика с анимацией</p></div>
+            <div class="card play-card"><span>🐍</span><h3>Змейка</h3><p>Собирай яблоки</p></div>
+            <div class="card play-card"><span>🧠</span><h3>Тест на память</h3><p>Найди все пары</p></div>
+            <div class="card play-card"><span>🔢</span><h3>2048</h3><p>Соединяй цифры</p></div>
         </div>
-    </section>
+    </div>
 
-    <footer id="contact">
-        <div class="social-links">
-            <a href="https://t.me/SPXLD" target="_blank">Telegram (@SPXLD)</a>
-            <a href="https://github.com/xayryedel" target="_blank">GitHub</a>
-        </div>
-        <div class="copyright">© 2026. Разработано с душой.</div>
-    </footer>
+    <div class="hidden" id="screen-portfolio">
+        <section class="portfolio-hero">
+            <h1>Привет, я <span>Frontend</span><br>Разработчик</h1>
+            <p>Создаю быстрые, адаптивные и визуально привлекательные веб-приложения. От идеи до готового продукта в браузере.</p>
+            <a onclick="showScreen('home')" class="btn">Вернуться в магазин</a>
+        </section>
+
+        <section class="portfolio-section">
+            <h2>Мои работы</h2>
+            <div class="projects-grid">
+                <a href="https://xayryedel.github.io/music-wave-web/" target="_blank" class="project-card">
+                    <div class="project-title">MusicWave <span>↗</span></div>
+                    <div class="project-desc">Музыкальный веб-сервис с поиском треков через iTunes API и кастомным плеером.</div>
+                    <div class="project-stack"><span class="tag">JavaScript</span><span class="tag">Supabase</span><span class="tag">API</span></div>
+                </a>
+                <a href="https://xayryedel.github.io/fingram/" target="_blank" class="project-card">
+                    <div class="project-title">ФинГрамотность <span>↗</span></div>
+                    <div class="project-desc">Образовательный проект с тестированием под возраст пользователя.</div>
+                    <div class="project-stack"><span class="tag">HTML5</span><span class="tag">CSS3</span><span class="tag">JS</span></div>
+                </a>
+                <a href="https://xayryedel.github.io/DomTech/" target="_blank" class="project-card">
+                    <div class="project-title">DomTech <span>↗</span></div>
+                    <div class="project-desc">Интернет-магазин бытовой техники с корзиной и градиентным дизайном.</div>
+                    <div class="project-stack"><span class="tag">E-commerce</span><span class="tag">SPA</span><span class="tag">JS</span></div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <div style="margin-bottom: 20px;">
+                <a href="https://t.me/SPXLD" target="_blank">Telegram (@SPXLD)</a>
+                <a href="https://github.com/xayryedel" target="_blank">GitHub</a>
+            </div>
+            <div>© 2026. Разработано с душой.</div>
+        </footer>
+    </div>
 
     <script>
-        const canvas = document.getElementById('code-bg');
-        const ctx = canvas.getContext('2d');
+        document.addEventListener('DOMContentLoaded', () => {
+            window.showScreen = function(screenName) {
+                document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+                document.getElementById('screen-portfolio').classList.add('hidden');
+                
+                const header = document.getElementById('main-header');
+                const canvas = document.getElementById('code-bg');
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        const codeWords = [
-            'const', 'let', 'function()', '=>', '{}', '[]', 
-            'React', 'Vue', 'Node.js', 'Python', 'HTML', 'CSS', 
-            'Git', 'API', 'npm', 'async', 'await', 'return', 
-            'if', 'else', 'True', 'False', 'null', 'undefined', 
-            'import', 'export', 'class', 'style', 'flex', 'grid',
-            'Supabase', 'Flask', 'SQL', 'JSON', '.map()', '.filter()'
-        ];
-
-        const fontSize = 16;
-        const columns = width / fontSize;
-        const drops = [];
-
-        for (let x = 0; x < columns; x++) {
-            drops[x] = Math.random() * height;
-        }
-
-        function draw() {
-            ctx.fillStyle = 'rgba(18, 18, 18, 0.08)';
-            ctx.fillRect(0, 0, width, height);
-
-            ctx.fillStyle = '#bb86fc';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = codeWords[Math.floor(Math.random() * codeWords.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > height && Math.random() > 0.975) {
-                    drops[i] = 0;
+                if (screenName === 'portfolio') {
+                    header.classList.add('hidden');
+                    document.getElementById('screen-portfolio').classList.remove('hidden');
+                    canvas.classList.remove('hidden');
+                    startCodeRain();
+                } else {
+                    header.classList.remove('hidden');
+                    canvas.classList.add('hidden');
+                    stopCodeRain();
+                    document.getElementById('screen-' + screenName).classList.remove('hidden');
                 }
-                drops[i]++;
+
+                if (screenName === 'cart') renderCart();
+            };
+
+            window.showProduct = function(title, price, img, spec1, spec2) {
+                document.getElementById('prod-title').textContent = title;
+                document.getElementById('prod-price').textContent = price.toLocaleString() + ' ₽';
+                document.getElementById('prod-img').src = img;
+                document.getElementById('prod-spec1').textContent = spec1;
+                document.getElementById('prod-spec2').textContent = spec2;
+                const btn = document.getElementById('prod-add-btn');
+                btn.onclick = function() { addToCart(title, price, img); };
+                showScreen('product');
+            };
+
+            let cart = [];
+            try {
+                const storedCart = localStorage.getItem('cart');
+                if (storedCart) cart = JSON.parse(storedCart);
+            } catch (e) { cart = []; }
+
+            function updateCartCount() {
+                const counter = document.getElementById('cart-count-header');
+                if (counter) counter.textContent = cart.length;
             }
-        }
-        setInterval(draw, 50);
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
+            window.addToCart = function(title, price, img) {
+                cart.push({ title, price, img });
+                try { localStorage.setItem('cart', JSON.stringify(cart)); } catch (e) {}
+                updateCartCount();
+                alert(`Товар "${title}" добавлен в корзину!`);
+            };
 
-        const cards = document.querySelectorAll('.project-card');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, index * 150);
-                    observer.unobserve(entry.target);
+            function renderCart() {
+                const container = document.getElementById('cart-items');
+                const totalCountEl = document.getElementById('total-count');
+                const totalPriceEl = document.getElementById('total-price');
+                const finalPriceEl = document.getElementById('final-price');
+                if (!container) return;
+                container.innerHTML = '';
+                if (cart.length === 0) {
+                    container.innerHTML = '<p style="font-size: 18px; color: #888;">Ваша корзина пуста.</p>';
+                    if (totalCountEl) totalCountEl.textContent = 0;
+                    if (totalPriceEl) totalPriceEl.textContent = '0 ₽';
+                    if (finalPriceEl) finalPriceEl.textContent = '0 ₽';
+                    return;
                 }
+                let sum = 0;
+                cart.forEach((item) => {
+                    sum += item.price;
+                    container.innerHTML += `
+                        <div class="card" style="flex-direction: row; align-items: center; padding: 15px;">
+                            <img src="${item.img}" alt="${item.title}" style="width: 100px; height: 100px; margin-bottom: 0; margin-right: 20px;">
+                            <div style="flex: 1;">
+                                <h3 style="margin-bottom: 5px;">${item.title}</h3>
+                                <div class="price" style="margin-bottom: 0;">${item.price.toLocaleString()} ₽</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                if (totalCountEl) totalCountEl.textContent = cart.length;
+                if (totalPriceEl) totalPriceEl.textContent = sum.toLocaleString() + ' ₽';
+                if (finalPriceEl) finalPriceEl.textContent = sum.toLocaleString() + ' ₽';
+            }
+
+            window.checkout = function() {
+                if (cart.length === 0) {
+                    alert('Корзина пуста!');
+                    return;
+                }
+                alert('Заказ оформлен! Спасибо за покупку.');
+                cart = [];
+                try { localStorage.removeItem('cart'); } catch (e) {}
+                updateCartCount();
+                showScreen('home');
+            };
+
+            let rainInterval = null;
+            const canvas = document.getElementById('code-bg');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            const codeWords = ['const', 'let', 'function()', '=>', '{}', '[]', 'React', 'Vue', 'Node.js', 'HTML', 'CSS', 'Git', 'API', 'async', 'await', 'return', 'if', 'else', 'null', 'import', 'export', 'class', 'style', 'flex', 'grid'];
+            const fontSize = 16;
+            let columns = Math.floor(width / fontSize);
+            let drops = [];
+            for (let x = 0; x < columns; x++) drops[x] = Math.random() * height;
+
+            function drawCodeRain() {
+                ctx.fillStyle = 'rgba(18, 18, 18, 0.08)';
+                ctx.fillRect(0, 0, width, height);
+                ctx.fillStyle = '#bb86fc';
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    const text = codeWords[Math.floor(Math.random() * codeWords.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+
+            function startCodeRain() {
+                if (!rainInterval) rainInterval = setInterval(drawCodeRain, 50);
+            }
+
+            function stopCodeRain() {
+                if (rainInterval) { clearInterval(rainInterval); rainInterval = null; }
+            }
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                columns = Math.floor(width / fontSize);
+                drops = [];
+                for (let x = 0; x < columns; x++) drops[x] = Math.random() * height;
             });
-        }, { threshold: 0.2 });
 
-        cards.forEach(card => observer.observe(card));
-
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.style.padding = '10px 0';
-            } else {
-                nav.style.padding = '20px 0';
-            }
+            updateCartCount();
+            showScreen('home');
         });
     </script>
 </body>
