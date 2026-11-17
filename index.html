@@ -3,60 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портфолио — Frontend Разработчик</title>
+    <title>Éclat | Гастрономический опыт</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;600&display=swap');
+
         :root {
-            --bg-color: #121212;
-            --surface: #1e1e1e;
-            --surface-hover: #2a2a2a;
-            --text-main: #e0e0e0;
-            --text-muted: #888888;
-            --accent: #bb86fc;
-            --accent-hover: #9a66d4;
-            --border: #333333;
+            --bg: #0a0a0a;
+            --text: #f5f5f5;
+            --accent: #c5a059;
+            --border: rgba(197, 160, 89, 0.3);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
         
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+            min-height: 100vh;
         }
 
-        #code-bg {
+        #canvas-container {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
-            opacity: 0.15;
+            opacity: 0.7;
             pointer-events: none;
         }
 
-        nav {
+        header {
             position: fixed;
             top: 0; left: 0; right: 0;
-            background: rgba(18, 18, 18, 0.8);
-            backdrop-filter: blur(10px);
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 100;
-            border-bottom: 1px solid var(--border);
-            padding: 20px 0;
-            transition: padding 0.3s;
+            mix-blend-mode: difference;
         }
-        .nav-content {
-            max-width: 1100px; margin: 0 auto; padding: 0 20px;
-            display: flex; justify-content: space-between; align-items: center;
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text);
         }
-        .logo { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; }
-        .logo span { color: var(--accent); }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
         .nav-links a {
-            color: var(--text-muted); text-decoration: none; margin-left: 20px;
-            font-size: 0.9rem; transition: color 0.3s;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 400;
+            position: relative;
         }
-        .nav-links a:hover { color: var(--accent); }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after { width: 100%; }
 
         .hero {
             height: 100vh;
@@ -66,336 +92,416 @@
             align-items: center;
             text-align: center;
             padding: 0 20px;
-        }
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s forwards;
-        }
-        .hero h1 span { color: var(--accent); }
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.3rem);
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s 0.2s forwards;
-        }
-        .btn {
-            display: inline-block;
-            padding: 14px 32px;
-            background: var(--accent);
-            color: #121212;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s 0.4s forwards;
-        }
-        .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(187, 134, 252, 0.2);
+            position: relative;
         }
 
-        .section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; }
-        .section-title {
-            font-size: 2rem; margin-bottom: 50px; text-align: center;
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(60px, 10vw, 140px);
+            font-weight: 300;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            opacity: 0;
+            transform: translateY(50px);
         }
-        .projects-grid {
+
+        .hero p {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--accent);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .menu-section {
+            padding: 150px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 100px;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .project-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
-            opacity: 0;
-            transform: translateY(40px);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .project-card.featured { border-color: rgba(187, 134, 252, 0.4); }
-        .project-card.featured::before {
-            content: '⭐ Featured';
-            position: absolute; top: 15px; right: -30px;
-            background: var(--accent); color: #121212;
-            padding: 4px 40px; font-size: 0.7rem; font-weight: 700;
-            transform: rotate(45deg);
+            gap: 60px;
         }
 
-        .project-card.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .menu-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 2px;
+            position: relative;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s;
+            opacity: 0;
+            transform: translateY(50px);
         }
-        .project-card:hover {
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border-color: var(--accent);
         }
-        .project-title {
-            font-size: 1.4rem; font-weight: 700; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .project-title span { color: var(--accent); font-size: 1.2rem; }
-        .project-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1; }
-        .project-stack {
-            display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto;
-        }
-        .tag {
-            background: rgba(187, 134, 252, 0.1);
+
+        .item-category {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             color: var(--accent);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+
+        .item-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .item-desc {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-weight: 300;
+        }
+
+        .item-price {
+            font-size: 20px;
             font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-price::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--accent);
         }
 
         footer {
             text-align: center;
-            padding: 60px 20px;
+            padding: 100px 20px;
             border-top: 1px solid var(--border);
-            margin-top: 50px;
         }
-        .social-links { margin-bottom: 20px; }
-        .social-links a {
-            color: var(--text-main); text-decoration: none; margin: 0 15px;
-            font-size: 1.1rem; transition: color 0.3s;
-        }
-        .social-links a:hover { color: var(--accent); }
-        .copyright { color: var(--text-muted); font-size: 0.9rem; }
 
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .device-selector {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .device-selector.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .device-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .device-buttons {
+            display: flex;
+            gap: 40px;
+        }
+
+        .device-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 30px 60px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .device-btn:hover {
+            background: rgba(197, 160, 89, 0.1);
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .device-icon {
+            font-size: 48px;
+            color: var(--accent);
         }
 
         @media (max-width: 768px) {
+            header { padding: 20px; }
             .nav-links { display: none; }
-            .section { padding: 60px 20px; }
+            .menu-section { padding: 100px 20px; }
+            .device-buttons { flex-direction: column; gap: 20px; }
+            .device-btn { padding: 20px 40px; }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="code-bg"></canvas>
-
-    <nav>
-        <div class="nav-content">
-            <div class="logo">DEV<span>.PORTFOLIO</span></div>
-            <div class="nav-links">
-                <a href="#projects">Проекты</a>
-                <a href="#about">Обо мне</a>
-                <a href="#contact">Контакты</a>
-            </div>
+    <div class="device-selector" id="device-selector">
+        <div class="device-title">Выберите устройство для просмотра</div>
+        <div class="device-buttons">
+            <button class="device-btn" onclick="selectDevice('pc')">
+                <span class="device-icon">💻</span>
+                Компьютер
+            </button>
+            <button class="device-btn" onclick="selectDevice('mobile')">
+                <span class="device-icon">📱</span>
+                Телефон
+            </button>
         </div>
-    </nav>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <header>
+        <div class="logo">ÉCLAT</div>
+        <div class="nav-links">
+            <a href="#menu">Меню</a>
+            <a href="#about">О нас</a>
+            <a href="#contact">Контакты</a>
+        </div>
+    </header>
 
     <section class="hero">
-        <h1>Привет, я <span>Frontend</span><br>Разработчик</h1>
-        <p>Создаю быстрые, адаптивные и визуально привлекательные веб-приложения. От идеи до готового продукта в браузере.</p>
-        <a href="#projects" class="btn">Смотреть работы</a>
+        <h1>Искусство<br>вкуса</h1>
+        <p>Гастрономический театр</p>
     </section>
 
-    <section id="projects" class="section">
-        <h2 class="section-title">Мои работы</h2>
-        <div class="projects-grid">
-            
-            <a href="https://xayryedel.github.io/music-wave-web/" target="_blank" class="project-card featured">
-                <div class="project-title">MusicWave <span>↗</span></div>
-                <div class="project-desc">Полноценный музыкальный веб-сервис. Поиск треков через iTunes API, кастомный плеер с эквалайзером, алгоритм «Моя волна», облачное сохранение избранного (Supabase Auth).</div>
-                <div class="project-stack">
-                    <span class="tag">JavaScript</span>
-                    <span class="tag">Supabase</span>
-                    <span class="tag">iTunes API</span>
-                    <span class="tag">SPA</span>
-                </div>
-            </a>
+    <section id="menu" class="menu-section">
+        <h2 class="section-title">Дегустационное меню</h2>
+        
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="item-category">Закуски</div>
+                <div class="item-name">Тартар из тунца</div>
+                <div class="item-desc">Свежий тунец, авокадо, цитрусовый соус, микрозелень и хрустящие чипсы из тапиоки.</div>
+                <div class="item-price">1 200 ₽</div>
+            </div>
 
-            <a href="https://xayryedel.github.io/PlayZone/" target="_blank" class="project-card">
-                <div class="project-title">PlayZone <span>↗</span></div>
-                <div class="project-desc">Коллекция мини-игр прямо в браузере. Крестики-нолики, Змейка, Тест на память, 2048. Работает без интернета.</div>
-                <div class="project-stack">
-                    <span class="tag">Vanilla JS</span>
-                    <span class="tag">Canvas</span>
-                    <span class="tag">Games</span>
-                </div>
-            </a>
+            <div class="menu-item">
+                <div class="item-category">Основное</div>
+                <div class="item-name">Томленая говядина</div>
+                <div class="item-desc">Говяжья щека, томленная 12 часов в красном вине, картофельное пюре с трюфелем.</div>
+                <div class="item-price">2 400 ₽</div>
+            </div>
 
-            <a href="https://xayryedel.github.io/fingram/" target="_blank" class="project-card">
-                <div class="project-title">ФинГрамотность <span>↗</span></div>
-                <div class="project-desc">Образовательный проект с тестированием. Адаптивные тесты под возраст пользователя, динамическая выдача результатов и уроков.</div>
-                <div class="project-stack">
-                    <span class="tag">HTML5</span>
-                    <span class="tag">CSS3</span>
-                    <span class="tag">JavaScript</span>
-                </div>
-            </a>
+            <div class="menu-item">
+                <div class="item-category">Основное</div>
+                <div class="item-name">Черная паста</div>
+                <div class="item-desc">Паста с чернилами каракатицы, гребешок, томаты черри, соус из белого вина.</div>
+                <div class="item-price">1 800 ₽</div>
+            </div>
 
-            <a href="https://xayryedel.github.io/leaf/" target="_blank" class="project-card">
-                <div class="project-title">LEAF <span>↗</span></div>
-                <div class="project-desc">Интернет-магазин косметики и парфюмерии. Каталог товаров, фильтрация, адаптивная верстка и стильный дизайн.</div>
-                <div class="project-stack">
-                    <span class="tag">E-commerce</span>
-                    <span class="tag">Адаптив</span>
-                    <span class="tag">UI/UX</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/bg-remover/" target="_blank" class="project-card">
-                <div class="project-title">BG Remover <span>↗</span></div>
-                <div class="project-desc">Инструмент для удаления фона с фотографий прямо в браузере. Работа с изображениями и Canvas.</div>
-                <div class="project-stack">
-                    <span class="tag">Canvas API</span>
-                    <span class="tag">Image Processing</span>
-                    <span class="tag">JS</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/-/" target="_blank" class="project-card">
-                <div class="project-title">FoodHub <span>↗</span></div>
-                <div class="project-desc">Сайт доставки пиццы и суши. Интерактивное меню, корзина, выбор размера и автоматический подсчет итоговой суммы.</div>
-                <div class="project-stack">
-                    <span class="tag">E-commerce</span>
-                    <span class="tag">Vanilla JS</span>
-                    <span class="tag">Cart Logic</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/codecraft-web/#form" target="_blank" class="project-card">
-                <div class="project-title">CodeCraft <span>↗</span></div>
-                <div class="project-desc">Лендинг IT-курсов с таймером обратного отсчёта, формой заявки и блоком отзывов. Анимации при скролле и адаптивная верстка.</div>
-                <div class="project-stack">
-                    <span class="tag">Landing Page</span>
-                    <span class="tag">JS Timer</span>
-                    <span class="tag">Animations</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/kicks-store/" target="_blank" class="project-card">
-                <div class="project-title">KicksStore <span>↗</span></div>
-                <div class="project-desc">Магазин кроссовок с фильтром по брендам, модальным окном товара, зумом изображения и полноценной корзиной.</div>
-                <div class="project-stack">
-                    <span class="tag">E-commerce</span>
-                    <span class="tag">Vanilla JS</span>
-                    <span class="tag">Image Zoom</span>
-                </div>
-            </a>
-
-            <a href="https://xayryedel.github.io/DomTech/" target="_blank" class="project-card">
-                <div class="project-title">DomTech <span>↗</span></div>
-                <div class="project-desc">Интернет-магазин бытовой техники с корзиной и градиентным дизайном.</div>
-                <div class="project-stack">
-                    <span class="tag">E-commerce</span>
-                    <span class="tag">SPA</span>
-                    <span class="tag">JS</span>
-                </div>
-            </a>
-
+            <div class="menu-item">
+                <div class="item-category">Десерт</div>
+                <div class="item-name">Шоколадный фондан</div>
+                <div class="item-desc">Теплый шоколадный фондан с жидким центром, шарик ванильного мороженого.</div>
+                <div class="item-price">800 ₽</div>
+            </div>
         </div>
     </section>
 
-    <section id="about" class="section">
-        <h2 class="section-title">Обо мне</h2>
-        <div style="max-width: 600px; margin: 0 auto; text-align: center; color: var(--text-muted); font-size: 1.1rem;">
-            <p>Пишу чистый код, который легко поддерживать. Люблю разбираться в сложных задачах и делать интерфейсы, которыми приятно пользоваться.</p>
-            <p style="margin-top: 20px;">Всегда на связи и открыт к интересным проектам.</p>
-        </div>
-    </section>
-
-    <footer id="contact">
-        <div class="social-links">
-            <a href="https://t.me/SPXLD" target="_blank">Telegram (@SPXLD)</a>
-            <a href="https://github.com/xayryedel" target="_blank">GitHub</a>
-        </div>
-        <div class="copyright">© 2026. Разработано с душой.</div>
+    <footer>
+        <div class="footer-logo">ÉCLAT</div>
+        <div class="footer-text">© 2026 Все права защищены</div>
     </footer>
 
     <script>
-        const canvas = document.getElementById('code-bg');
-        const ctx = canvas.getContext('2d');
+        let scene, camera, renderer, mainObject, particlesMesh;
+        let isMobile = false;
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        const codeWords = [
-            'const', 'let', 'function()', '=>', '{}', '[]', 
-            'React', 'Vue', 'Node.js', 'Python', 'HTML', 'CSS', 
-            'Git', 'API', 'npm', 'async', 'await', 'return', 
-            'if', 'else', 'True', 'False', 'null', 'undefined', 
-            'import', 'export', 'class', 'style', 'flex', 'grid',
-            'Supabase', 'Flask', 'SQL', 'JSON', '.map()', '.filter()'
-        ];
-
-        const fontSize = 16;
-        const columns = width / fontSize;
-        const drops = [];
-
-        for (let x = 0; x < columns; x++) {
-            drops[x] = Math.random() * height;
+        function selectDevice(device) {
+            isMobile = (device === 'mobile');
+            document.getElementById('device-selector').classList.add('hidden');
+            init3DScene();
+            runAnimations();
         }
 
-        function draw() {
-            ctx.fillStyle = 'rgba(18, 18, 18, 0.08)';
-            ctx.fillRect(0, 0, width, height);
+        function init3DScene() {
+            const container = document.getElementById('canvas-container');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
 
-            ctx.fillStyle = '#bb86fc';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = codeWords[Math.floor(Math.random() * codeWords.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-        setInterval(draw, 50);
-
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
-
-        const cards = document.querySelectorAll('.project-card');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, index * 150);
-                    observer.unobserve(entry.target);
-                }
+            const geometry = isMobile 
+                ? new THREE.IcosahedronGeometry(15, 1) 
+                : new THREE.TorusKnotGeometry(10, 3, 100, 16);
+                
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0xc5a059, 
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
             });
-        }, { threshold: 0.2 });
+            
+            mainObject = new THREE.Mesh(geometry, material);
+            scene.add(mainObject);
 
-        cards.forEach(card => observer.observe(card));
+            const particlesGeo = new THREE.BufferGeometry();
+            const particlesCount = isMobile ? 300 : 700;
+            const posArray = new Float32Array(particlesCount * 3);
 
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.style.padding = '10px 0';
-            } else {
-                nav.style.padding = '20px 0';
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * (isMobile ? 80 : 100);
             }
-        });
+
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMat = new THREE.PointsMaterial({
+                size: isMobile ? 0.3 : 0.2,
+                color: 0xc5a059,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particlesMesh);
+
+            camera.position.z = isMobile ? 40 : 30;
+
+            const mouse = { x: 0, y: 0 };
+            
+            if (isMobile) {
+                window.addEventListener('deviceorientation', (event) => {
+                    mouse.x = event.gamma / 45;
+                    mouse.y = event.beta / 45;
+                });
+            } else {
+                window.addEventListener('mousemove', (event) => {
+                    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                });
+            }
+
+            const clock = new THREE.Clock();
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const elapsedTime = clock.getElapsedTime();
+
+                mainObject.rotation.x = elapsedTime * 0.1;
+                mainObject.rotation.y = elapsedTime * 0.15;
+
+                if (mouse.x !== undefined) {
+                    mainObject.rotation.x += (mouse.y || 0) * 0.05;
+                    mainObject.rotation.y += (mouse.x || 0) * 0.05;
+                }
+
+                particlesMesh.rotation.y = elapsedTime * 0.02;
+                if (mouse.x !== undefined) {
+                    particlesMesh.rotation.x = (mouse.y || 0) * 0.1;
+                    particlesMesh.rotation.y += (mouse.x || 0) * 0.1;
+                }
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        function runAnimations() {
+            gsap.to('.hero h1', {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: 'power3.out',
+                delay: 0.2
+            });
+
+            gsap.to('.hero p', {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: 'power3.out',
+                delay: 0.6
+            });
+
+            const observerOptions = {
+                threshold: 0.2
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        gsap.to(entry.target, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1,
+                            ease: 'power3.out'
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                observer.observe(item);
+            });
+        }
     </script>
 </body>
 </html>
